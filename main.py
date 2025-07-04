@@ -48,7 +48,7 @@ def health_check():
 @app.get("/version", tags=["util"])
 def version_check():
     """Verifica a versão da aplicação."""
-    return {"version": "1.0.0"}
+    return {"version": "2.0.0"}
 
 @app.get("/liveness", tags=["k8s"])
 def liveness_check():
