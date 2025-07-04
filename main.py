@@ -69,7 +69,7 @@ def redirect_to_docs():
 @app.get("/version", tags=["util"])
 def version():
     """Retorna a versão do aplicativo."""
-    return "2.0.0"
+    return "3.0.0"
 
 
 def simulate_heavy_load_randomly():
