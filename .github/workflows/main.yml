@@ -56,7 +56,6 @@ jobs:
       IMAGE_NAME: ${{ vars.IMAGE_NAME }}
       IMAGE_TAG: ${{ github.sha }}
       REGISTRY: ghcr.io
-      FULL_IMAGE: ghcr.io/${{ github.repository_owner }}/${{ vars.IMAGE_NAME }}:${{ github.sha }}
       VALUES_FILE: manifests/values.yaml
 
     steps:
@@ -74,17 +73,26 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build e push da imagem
-        id: build
+      - name: Compila nome do repo
+        id: compile
         run: |
           FULL_IMAGE=$( echo "${REGISTRY}/${{ github.repository_owner }}/${{ vars.IMAGE_NAME }}:${{ github.sha }}" | tr '[:upper:]' '[:lower:]')
           echo "full_image=$FULL_IMAGE" >> "$GITHUB_OUTPUT"
-          docker build -t $FULL_IMAGE .
-          docker push $FULL_IMAGE
+
+      - name: Build & push
+        id: build
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          tags: ${{ steps.compile.outputs.full_image }}
+          push: true
+          provenance: false
+          sbom: false
+
 
       - name: Atualiza tag da imagem em values.yaml
         run: |
-          sed -i "s|^\(.*image:[[:space:]]*\).*|\1${{ steps.build.outputs.full_image }}|" "$VALUES_FILE"
+          sed -i "s|^\(.*image:[[:space:]]*\).*|\1${{ steps.compile.outputs.full_image }}|" "$VALUES_FILE"
 
       - name: Commit e push da alteracao
         env:
@@ -93,5 +101,5 @@ jobs:
           git config --global user.name  "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add "$VALUES_FILE"
-          git commit -m "ci: Atualizada a image para ${{ steps.build.outputs.full_image }}" || echo "Nada para commitar"
+          git commit -m "ci: Atualizada a image para ${{ steps.compile.outputs.full_image }}" || echo "Nada para commitar"
           git push origin HEAD:$TARGET_BRANCH
