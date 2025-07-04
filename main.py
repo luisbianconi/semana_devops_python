@@ -66,6 +66,10 @@ def redirect_to_docs():
     return RedirectResponse(url="/docs")
 
 # Funções de simulação
+@app.get("/version", tags=["util"])
+def version():
+    """Retorna a versão do aplicativo."""
+    return "1.0.0"
 
 
 def simulate_heavy_load_randomly():
