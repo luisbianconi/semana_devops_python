@@ -17,28 +17,27 @@ spec:
           image: {{ .Values.image }}
           ports:
             - containerPort: 8081
-          probes:
-            startupProbe:
-              enabled: true
-              failureThreshold: 10
-              periodSeconds: 10
-              httpGet:
-                path: /startup
-                port: 8081
-            readinessProbe:
-              enabled: true
-              failureThreshold: 10
-              periodSeconds: 10
-              httpGet:
-                path: /readyz
-                port: 8081
-            livenessProbe:
-              enabled: true
-              failureThreshold: 10
-              periodSeconds: 10
-              httpGet:
-                path: /liveness
-                port: 8081
+          startupProbe:
+            enabled: true
+            failureThreshold: 10
+            periodSeconds: 10
+            httpGet:
+              path: /startup
+              port: 8081
+          readinessProbe:
+            enabled: true
+            failureThreshold: 10
+            periodSeconds: 10
+            httpGet:
+              path: /readyz
+              port: 8081
+          livenessProbe:
+            enabled: true
+            failureThreshold: 10
+            periodSeconds: 10
+            httpGet:
+              path: /liveness
+              port: 8081
   strategy:
     canary:
       steps:
