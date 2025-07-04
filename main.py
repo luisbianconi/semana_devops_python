@@ -45,6 +45,10 @@ def health_check():
     simulate_unhealthy_behavior_randomly()
     return {"status": "ok"}
 
+@app.get("/version", tags=["util"])
+def version_check():
+    """Verifica a versão da aplicação."""
+    return {"version": "1.0.0"}
 
 @app.get("/liveness", tags=["k8s"])
 def liveness_check():
