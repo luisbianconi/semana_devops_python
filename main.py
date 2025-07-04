@@ -65,13 +65,6 @@ def startup_check():
 def redirect_to_docs():
     return RedirectResponse(url="/docs")
 
-# Funções de simulação
-@app.get("/version", tags=["util"])
-def version():
-    """Retorna a versão do aplicativo."""
-    return "3.0.0"
-
-
 def simulate_heavy_load_randomly():
     """Simula um uso pesado aleatoriamente."""
     if not os.getenv("SIMULATE_HEAVY_LOAD"):
